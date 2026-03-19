@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    build: ./database 
+    env_file:
+      - .env          
+    ports:
+      - "5432:5432"
+    networks:
+      - interne
+
+  back:
+    build: ./back 
+    env_file:
+      - .env          
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db     
+    networks:
+      - web     
+      - interne
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.back.rule=Host(`api.aaron.com`)"
+      - "traefik.http.routers.back.entrypoints=web"
+      - "traefik.http.services.back.loadbalancer.server.port=8000"
+      - "traefik.docker.network=react-flask-ci-cd_web"
+
+  front:
+    build: ./front
+    env_file:
+      - .env          
+    ports:
+      - "5173:5173"
+    depends_on:
+      - back
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.front.rule=Host(`front.aaron.com`)"
+      - "traefik.http.routers.front.entrypoints=web"
+      - "traefik.http.services.front.loadbalancer.server.port=5173"
+networks:
+  web:
+    external: true
+    name: react-flask-ci-cd_web
+  interne:
+    driver: bridge
