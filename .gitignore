@@ -1,0 +1,29 @@
+# Environment variables
+.env
+.env.local
+
+# Data volumes
+/data/
+/data-ce/
+/data-portainer/
+
+# Dependencies
+node_modules/
+.venv/
+venv/
+__pycache__/
+
+# Private keys & certificates
+*.pem
+*.key
+*.pub
+
+# Database/Logs
+*.db
+*.sqlite
+*.log
+
+# IDE
+.vscode/
+.idea/
+*.swp
